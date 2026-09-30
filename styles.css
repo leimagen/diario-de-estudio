@@ -1,0 +1,282 @@
+/* Estética de cuaderno cuadriculado: papel, tinta azul, margen rojo y fluorescente. */
+:root {
+  --paper: #f7f9fb;
+  --grid: #dfe7f0;
+  --ink: #1c2b4b;
+  --ink-hover: #2c4270;
+  --ink-soft: #5b6882;
+  --margin-line: #e4575d;
+  --highlighter: #f4ea5a;
+
+  --unit: 24px; /* tamaño de cada cuadro; los espacios son múltiplos */
+  --margin-width: 8rem; /* columna del margen, donde van las fechas */
+
+  --font-text: "Iowan Old Style", Charter, "Bitstream Charter", Cambria, Georgia, serif;
+  --font-labels: Bahnschrift, "DIN Alternate", "Avenir Next Condensed", "sans-serif-condensed", "Arial Narrow", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background-color: var(--paper);
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: var(--unit) var(--unit);
+  color: var(--ink);
+  font-family: var(--font-text);
+  font-size: 1.0625rem;
+  line-height: var(--unit);
+}
+
+/* ---------- Página y línea de margen ---------- */
+.page {
+  position: relative;
+  max-width: 760px;
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: calc(var(--unit) * 2) var(--unit) calc(var(--unit) * 4);
+}
+
+.page::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(var(--unit) + var(--margin-width) + var(--unit) / 2 - 1px);
+  width: 2px;
+  background: var(--margin-line);
+  opacity: 0.75;
+}
+
+/* Cada bloque tiene dos columnas: el margen y el contenido. */
+.row {
+  display: grid;
+  grid-template-columns: var(--margin-width) minmax(0, 1fr);
+  column-gap: var(--unit);
+  margin-bottom: calc(var(--unit) * 2);
+}
+
+.row > * {
+  grid-column: 2;
+}
+
+/* ---------- Cabecera ---------- */
+.title {
+  margin: 0;
+  font-family: var(--font-labels);
+  font-size: 1.75rem;
+  font-weight: 600;
+  line-height: calc(var(--unit) * 1.5);
+}
+
+.subtitle {
+  margin: 0;
+  color: var(--ink-soft);
+}
+
+/* ---------- Racha ---------- */
+.streak-value {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 var(--unit);
+  margin: 0;
+}
+
+.streak-number {
+  font-family: var(--font-labels);
+  font-size: clamp(5rem, 20vw, 8.5rem);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  padding: 0 0.1em;
+  /* Trazo de fluorescente que se dibuja de izquierda a derecha al cargar. */
+  background: linear-gradient(transparent 48%, var(--highlighter) 48%, var(--highlighter) 90%, transparent 90%) no-repeat left;
+  background-size: 100% 100%;
+  animation: highlight 700ms ease-out 200ms both;
+}
+
+.streak-label {
+  font-size: 1.375rem;
+  color: var(--ink-soft);
+}
+
+.best-streak,
+.week-minutes {
+  margin: var(--unit) 0 0;
+  font-family: var(--font-labels);
+  font-size: 1.0625rem;
+  color: var(--ink-soft);
+}
+
+.best-streak span,
+.week-minutes span {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+
+@keyframes highlight {
+  from {
+    background-size: 0% 100%;
+  }
+  to {
+    background-size: 100% 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .streak-number {
+    animation: none;
+  }
+}
+
+/* ---------- Títulos de sección ---------- */
+.section-title {
+  margin: 0 0 var(--unit);
+  font-family: var(--font-labels);
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+/* ---------- Formulario ---------- */
+.form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--unit);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-family: var(--font-labels);
+  font-size: 0.9375rem;
+  color: var(--ink-soft);
+}
+
+.field-topic {
+  grid-column: 1 / -1;
+}
+
+.field input {
+  font-family: var(--font-text);
+  font-size: 1.0625rem;
+  color: var(--ink);
+  padding: 8px 10px;
+  background: #fff;
+  border: 1px solid var(--grid);
+  border-bottom: 2px solid var(--ink-soft);
+  border-radius: 0;
+}
+
+.field input:focus {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+  border-bottom-color: var(--ink);
+}
+
+.button {
+  grid-column: 1 / -1;
+  justify-self: start;
+  font-family: var(--font-labels);
+  font-size: 1.0625rem;
+  font-weight: 600;
+  padding: 12px var(--unit);
+  border: none;
+  border-radius: 2px;
+  background: var(--ink);
+  color: #fff;
+  cursor: pointer;
+}
+
+.button:hover {
+  background: var(--ink-hover);
+}
+
+.button:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+
+/* ---------- Lista de sesiones ---------- */
+.empty {
+  margin: 0;
+  color: var(--ink-soft);
+}
+
+/* La lista ocupa también el margen, para escribir ahí la fecha. */
+.row > .session-list {
+  grid-column: 1 / -1;
+}
+
+.session-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.session {
+  display: grid;
+  grid-template-columns: var(--margin-width) minmax(0, 1fr) auto;
+  column-gap: var(--unit);
+  align-items: baseline;
+  padding: 12px 0;
+}
+
+.session-date {
+  font-family: var(--font-labels);
+  font-size: 0.9375rem;
+  color: var(--ink-soft);
+  text-align: right;
+}
+
+.session-topic {
+  overflow-wrap: anywhere;
+}
+
+.session-minutes {
+  font-family: var(--font-labels);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Móvil: el margen se estrecha y las fechas van encima del tema ---------- */
+@media (max-width: 600px) {
+  .page {
+    padding: var(--unit) 16px calc(var(--unit) * 3) 40px;
+  }
+
+  .page::before {
+    left: 24px;
+  }
+
+  .row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .row > *,
+  .row > .session-list {
+    grid-column: 1;
+  }
+
+  .session {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .session-date {
+    grid-column: 1 / -1;
+    text-align: left;
+    font-size: 0.875rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .form {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Diario de Estudio</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="page">
+    <header class="row">
+      <h1 class="title">Diario de Estudio</h1>
+      <p class="subtitle">Registra lo que estudias y no rompas la racha.</p>
+    </header>
+
+    <section class="row streak" aria-live="polite">
+      <p class="streak-value">
+        <span class="streak-number" id="streak-number">0</span>
+        <span class="streak-label" id="streak-label">días seguidos</span>
+      </p>
+      <p class="best-streak">Mejor racha: <span id="best-streak-number">0</span> <span id="best-streak-label">días</span></p>
+      <p class="week-minutes"><span id="week-minutes-number">0</span> min esta semana</p>
+    </section>
+
+    <section class="row">
+      <h2 class="section-title">Nueva sesión</h2>
+      <form id="session-form" class="form">
+        <label class="field field-topic">
+          <span>Tema</span>
+          <input type="text" id="topic" placeholder="Ej.: Arrays en JavaScript" required>
+        </label>
+        <label class="field">
+          <span>Fecha</span>
+          <input type="date" id="date" required>
+        </label>
+        <label class="field">
+          <span>Minutos</span>
+          <input type="number" id="minutes" min="1" step="1" placeholder="30" required>
+        </label>
+        <button type="submit" class="button">Guardar sesión</button>
+      </form>
+    </section>
+
+    <section class="row">
+      <h2 class="section-title">Sesiones</h2>
+      <p id="empty-message" class="empty">Aún no hay sesiones. ¡Registra la primera!</p>
+      <ul id="session-list" class="session-list"></ul>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
