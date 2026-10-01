@@ -23,6 +23,21 @@
     </section>
 
     <section class="row">
+      <h2 class="section-title">Últimas 12 semanas</h2>
+      <!-- app.js crea aquí una casilla por día (renderHeatMap). -->
+      <div id="heatmap" class="heatmap" role="group" aria-label="Mapa de calor de las últimas 12 semanas"></div>
+      <p class="heatmap-legend">
+        Menos
+        <span class="heat-cell level-0" role="img" aria-label="0 min" title="0 min"></span>
+        <span class="heat-cell level-1" role="img" aria-label="1-29 min" title="1-29 min"></span>
+        <span class="heat-cell level-2" role="img" aria-label="30-59 min" title="30-59 min"></span>
+        <span class="heat-cell level-3" role="img" aria-label="60-119 min" title="60-119 min"></span>
+        <span class="heat-cell level-4" role="img" aria-label="120 min o más" title="120 min o más"></span>
+        Más
+      </p>
+    </section>
+
+    <section class="row">
       <h2 class="section-title">Nueva sesión</h2>
       <form id="session-form" class="form">
         <label class="field field-topic">

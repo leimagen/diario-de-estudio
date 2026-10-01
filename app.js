@@ -33,6 +33,7 @@ const streakLabel = document.getElementById("streak-label");
 const bestStreakNumber = document.getElementById("best-streak-number");
 const bestStreakLabel = document.getElementById("best-streak-label");
 const weekMinutesNumber = document.getElementById("week-minutes-number");
+const heatMap = document.getElementById("heatmap");
 const sessionList = document.getElementById("session-list");
 const emptyMessage = document.getElementById("empty-message");
 
@@ -61,13 +62,30 @@ function renderWeekMinutes(sessions, today) {
   weekMinutesNumber.textContent = calculateWeekMinutes(sessions, today);
 }
 
+// Una casilla por día de las últimas 12 semanas. El CSS las coloca en columnas
+// de lunes a domingo; el texto (fecha y minutos) lo leen los lectores de pantalla
+// y aparece al pasar el ratón.
+function renderHeatMap(sessions, today) {
+  heatMap.innerHTML = "";
+  buildHeatMap(sessions, today).forEach(function (day) {
+    const cell = document.createElement("span");
+    cell.className = "heat-cell level-" + day.level;
+    cell.setAttribute("role", "img");
+    const label = formatDate(day.date) + ": " + day.minutes + " min";
+    cell.setAttribute("aria-label", label);
+    cell.title = label;
+    heatMap.append(cell);
+  });
+}
+
 function renderSessions(sessions) {
   sessionList.innerHTML = "";
   emptyMessage.hidden = sessions.length > 0;
 
   // Las más recientes primero. Las fechas "AAAA-MM-DD" se pueden comparar como texto.
+  // String(... || "") evita que una sesión guardada sin fecha rompa la lista.
   const sorted = sessions.slice().sort(function (a, b) {
-    return b.date.localeCompare(a.date);
+    return String(b.date || "").localeCompare(String(a.date || ""));
   });
 
   sorted.forEach(function (session) {
@@ -77,7 +95,8 @@ function renderSessions(sessions) {
     // La fecha va primero: en pantallas anchas se escribe en el margen.
     const date = document.createElement("span");
     date.className = "session-date";
-    date.textContent = formatDate(session.date);
+    // Si la fecha guardada no es válida, se avisa en su lugar y la sesión no se borra.
+    date.textContent = isValidDateKey(session.date) ? formatDate(session.date) : "Fecha no válida";
 
     const topic = document.createElement("span");
     topic.className = "session-topic";
@@ -98,6 +117,7 @@ function render() {
   renderStreak(sessions, today);
   renderBestStreak(sessions, today);
   renderWeekMinutes(sessions, today);
+  renderHeatMap(sessions, today);
   renderSessions(sessions);
 }
 
