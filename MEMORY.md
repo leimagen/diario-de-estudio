@@ -1,34 +1,29 @@
 # MEMORY.md — Diario de Estudio
 Memoria del proyecto entre sesiones. Máximo ~50 líneas: resume o elimina lo que ya no aporte.
 ## Estado actual
-- v1 creada (2026-09-30): `index.html`, `styles.css`, `app.js`. Registrar sesiones (fecha, tema, minutos), racha actual y lista de sesiones (más recientes primero).
-- Lógica de racha probada con Node (hoy, solo ayer, huecos, duplicados, futuras).
-- Prueba E2E con Chrome DevTools MCP (2026-09-30): 3 sesiones (hoy, ayer, anteayer) → racha 3, mejor racha 3, 95 min, datos bien guardados; consola limpia; a 375px sin scroll horizontal.
-- Herramientas de Claude Code: comando `/feature` (planifica una funcionalidad antes de tocar código) y skill `web-design-guidelines` (revisión de UI), ambos en `.claude/`.
-- Diseño "cuaderno cuadriculado" (2026-09-30): fondo de cuadrícula, línea de margen roja, tinta azul, número de racha grande con trazo de fluorescente (única animación, respeta reduced-motion). Fechas de sesiones en la columna del margen; en móvil (≤600px) van encima del tema.
-- Minutos de esta semana (2026-09-30): línea "X min esta semana" bajo la racha, `calculateWeekMinutes()` en `app.js`. Probada con Node (vacío, futuras, domingo, cambio de año) y en el navegador.
-- Mejor racha (2026-09-30): línea "Mejor racha: N días" entre la racha y los minutos, `calculateBestStreak()` en `app.js`. Probada con Node (vacío, futuras, duplicados, desorden, racha antigua mayor, cambio de mes/año, bisiesto, cambio de hora) y revisada en el navegador (2026-09-30).
-- MCP Chrome DevTools (2026-09-30): en `.mcp.json` (equivale al `opencode.json` del instructor), creado con `claude mcp add --scope project`. Permite al agente abrir `index.html` en Chrome y revisar consola, DOM y capturas.
-- MCP Context7 (2026-09-30): también en `.mcp.json`, servidor remoto HTTP (`https://mcp.context7.com/mcp`), sin API key. Da documentación actualizada; `AGENTS.md` pide consultarla al empezar cada sesión.
+- App (2026-09-30): registrar sesiones (fecha, tema, minutos), racha actual, mejor racha, minutos de esta semana y lista de sesiones (más recientes primero). Diseño "cuaderno cuadriculado".
+- Refactor a la constitución (2026-10-01): cálculos en `logic.js` (funciones puras que reciben `today`), interfaz y localStorage en `app.js`. 23 tests en `tests/logic.test.js` en verde; verificado con Chrome DevTools (datos ya guardados, alta por formulario, 375px, consola limpia).
+- SDD montado (2026-10-01): `docs/constitution.md`, skill `.claude/skills/sdd/` y comandos `/sdd-constitution`, `/sdd-spec`, `/sdd-clarify`, `/sdd-plan`, `/sdd-tasks`, `/sdd-implement`, `/sdd-validate`, `/sdd-change`, `/sdd-status`. Aún no hay ninguna spec: la primera del curso será `001-heat-map`.
+- Otras herramientas: skill `web-design-guidelines`, MCP Chrome DevTools y Context7 en `.mcp.json`.
+- Repo público: `leimagen/diario-de-estudio` (rama `main`). `.gitignore` excluye `.claude/settings.local.json`.
 ## Decisiones (y por qué)
-- Mejor racha calculada desde las sesiones, no guardada: no cambia el formato de los datos, funciona con lo ya registrado y nunca se desincroniza. Línea discreta (mismo estilo que los minutos), sin mensaje especial al igualarla (no se pidió).
-- Sin emojis ni iconos decorativos, aunque el build del instructor los use (copas, medallas…): preferencia del usuario. Ya es regla en `AGENTS.md`.
-- Semana = lunes a hoy: semana natural en España; las futuras no suman, igual que en la racha. Se muestra solo en minutos, como la lista.
-- Sin backend ni dependencias: cualquiera debe poder abrirlo con doble clic.
-- Fecha editable en el formulario (por defecto hoy): permite registrar días pasados y ver la racha crecer.
-- Se permiten fechas futuras en el formulario, pero no suman a la racha (la racha se cuenta hacia atrás desde hoy/ayer).
-- Tras guardar se conserva la fecha elegida, para registrar varias sesiones del mismo día.
-- Solo fuentes del sistema (Bahnschrift/DIN para rótulos y números, Iowan/Charter/Cambria/Georgia para texto): Google Fonts sería una dependencia externa y fallaría sin conexión.
-- Espaciados en múltiplos de `--unit` (24px, el tamaño del cuadro) para que todo encaje en la cuadrícula.
-- `CLAUDE.md` solo importa `AGENTS.md` (+ notas propias de Claude Code): una única fuente de reglas. Se mantiene `AGENTS.md` en este build para ir alineado con el curso.
+- SDD adaptado del curso (opencode) a Claude Code: sin `agent: plan/build` en los comandos (en Claude Code `agent:` lanza un subagente; el "Plan" integrado es de solo lectura y no podría escribir la spec). Argumentos `$0`, `$1` (en Claude Code empiezan en 0; en opencode `$1`, `$2`). `disable-model-invocation: true` para que cada fase la lances tú.
+- Tests en `tests/*.test.js`: `node --test` sin argumentos no encuentra archivos sueltos en una carpeta `tests/` (plural) si no terminan en `.test.js`.
+- `logic.js` se carga con `<script>` normal (funciona con doble clic) y exporta con `if (typeof module !== "undefined") module.exports = ...` para que Node pueda hacer `require`.
+- `/feature` borrado (2026-10-01): los comandos `/sdd-*` lo sustituyen; una sola forma de trabajar, como en el curso.
+- Mejor racha calculada desde las sesiones, no guardada: no cambia el formato de los datos y nunca se desincroniza.
+- Sin emojis ni iconos decorativos (preferencia del usuario; ya es regla en `AGENTS.md`).
+- Semana = lunes a hoy (semana natural en España); las futuras no suman.
+- Fecha editable en el formulario (por defecto hoy), se conserva tras guardar; se permiten fechas futuras, pero no suman.
+- Solo fuentes del sistema (Google Fonts sería una dependencia externa). Espaciados en múltiplos de `--unit` (24px).
+- `CLAUDE.md` solo importa `AGENTS.md`: una única fuente de reglas, alineada con el curso.
 ## Aprendizajes y errores a evitar
-- Fechas: usar `toDateKey()` / `fromDateKey()` de `app.js`, nunca `toISOString()` ni `new Date("AAAA-MM-DD")`.
+- Fechas: usar `toDateKey()` / `fromDateKey()` de `logic.js`, nunca `toISOString()` ni `new Date("AAAA-MM-DD")`. En los tests, fijar "hoy" (p. ej. `"2026-10-01"`) en vez de usar la fecha real.
 - Pintar textos del usuario con `textContent`, no con `innerHTML`.
-- En el grid del formulario, el campo que ocupa toda la fila (Tema) debe ir primero en el HTML; si no, deja un hueco vacío.
-- Skills: son carpetas normales en `.claude/skills/`; no existen `.agents/` ni `skills-lock.json` (la documentación anterior decía lo contrario y no era cierto). Mejor así para GitHub: los enlaces simbólicos dan problemas en Git en Windows.
-- MCP en Windows: los servidores con `npx` van con `cmd /c npx ...`; en Mac/Linux sobra el `cmd /c`. El formato de `.mcp.json` (`mcpServers`) no es el de `opencode.json` (`mcp`): no copiar uno en el otro. Los MCP remotos (`--transport http`, como Context7) no necesitan `cmd /c` y valen en cualquier sistema.
-- Si algún MCP pide API key, nunca escribirla en `.mcp.json` (se sube a GitHub): usar variable de entorno o configuración personal (sin `--scope project`).
-- Capturas y pruebas en navegador: usar el MCP de Chrome DevTools (`new_page` con `isolatedContext` para empezar sin datos, `emulate` con viewport 375x812 para móvil). Ya no hace falta el truco del iframe con Edge headless.
-- Al abrir `file://` con el MCP en un contexto aislado sale una vez "Unsafe attempt to load URL file:///…": es del propio Chrome, no de la app (tras recargar desaparece).
+- En el grid del formulario, el campo que ocupa toda la fila (Tema) debe ir primero en el HTML.
+- Skills y comandos: en `.claude/skills/` y `.claude/commands/` (no `.agents/` ni `.opencode/`). Nada de enlaces simbólicos: dan problemas en Git en Windows.
+- MCP: `.mcp.json` usa `mcpServers` (no el `mcp` de `opencode.json`). En Windows, los de `npx` van con `cmd /c`; los remotos HTTP (Context7) valen en cualquier sistema. Nunca escribir API keys en `.mcp.json`.
+- Pruebas en navegador con el MCP de Chrome DevTools: `new_page` con `isolatedContext` para empezar sin datos, `emulate` 375x812 para móvil. El aviso "Unsafe attempt to load URL file:///…" al abrir es de Chrome, no de la app.
 ## Próximos pasos
-- Repo público en GitHub (2026-09-30): `leimagen/diario-de-estudio`, rama `main`. `.gitignore` excluye `.claude/settings.local.json` (permisos y rutas personales). Antes de cada push, revisar que no se cuelan datos sensibles.
+- Empezar la spec `001-heat-map` con `/sdd-spec 001-heat-map <idea>`.
+- Antes de cada push, revisar que no se cuelan datos sensibles.

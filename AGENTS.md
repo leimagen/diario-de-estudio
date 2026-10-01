@@ -2,8 +2,13 @@
 Web estática para registrar sesiones de estudio y motivarse viendo la racha de días seguidos. Proyecto didáctico: el código debe poder entenderlo alguien que empieza a programar.
 ## Stack y estructura
 - HTML, CSS y JavaScript puros: sin frameworks, librerías, npm, bundler ni build.
-- `index.html` (estructura), `styles.css` (estilos), `app.js` (lógica y datos).
+- `index.html` (estructura), `styles.css` (estilos), `logic.js` (cálculos: funciones puras), `app.js` (interfaz y localStorage).
+- `tests/` (tests de `logic.js`), `docs/constitution.md` (principios innegociables), `specs/NNN-nombre/` (spec, plan y tareas de cada funcionalidad).
 - Debe funcionar abriendo `index.html` con doble clic (`file://`): nada de módulos ES (`type="module"`), `fetch` a archivos locales ni nada que requiera servidor.
+## Comandos
+- Tests: `node --test`
+## Reglas
+- Lee `docs/constitution.md` y la spec activa (`specs/NNN-*/`) antes de tocar código.
 ## Convenciones
 - Textos de la interfaz en español.
 - Código simple, nombres descriptivos y comentarios solo donde aporten.
@@ -30,7 +35,8 @@ Web estática para registrar sesiones de estudio y motivarse viendo la racha de 
 - 🚫 Nunca: añadir dependencias, frameworks o un paso de build.
 - ✅ Siempre: actualizar `MEMORY.md` al terminar cada tarea.
 ## Verificación
-- No hay tests automáticos. Después de cada cambio, verifica con el MCP de Chrome DevTools: abre `index.html`, prueba la funcionalidad, revisa la consola y comprueba la vista móvil.
+- La lógica se prueba con `node --test` (archivos `tests/*.test.js`, sin instalar paquetes). Prohibido avanzar con tests en rojo.
+- La interfaz se verifica después de cada cambio con el MCP de Chrome DevTools: abre `index.html`, prueba la funcionalidad, revisa la consola y comprueba la vista móvil.
 - Para empezar de cero: DevTools → Application → Local Storage → borrar la clave `diario-estudio-sesiones`.
 ## Memoria
 - Al empezar, lee `MEMORY.md` para conocer el estado del proyecto y las decisiones tomadas.
